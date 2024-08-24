@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Задание открытого типа-1 </title>
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+
+
+    <div class="wrapper">
+      <section class="VR">
+        <video id="video" width="500" height="400" autoplay class="vid"></video><br>
+    <button id="startRecord">НАЧАТЬ ЗАПИСЬ</button>
+    <button id="stopRecord">ОСТАНОВИТЬ ЗАПИСЬ</button>
+    <a id="downloadLink" download="video.mp4">ЗАГРУЗИТЬ ВИДЕО</a>
+  <script type="text/javascript">
+      var video = document.querySelector("#video");
+      var startRecord = document.querySelector("#startRecord");
+      var stopRecord = document.querySelector("#stopRecord");
+      var downloadLink = document.querySelector("#downloadLink");
+
+      window.onload = async function(){
+        stopRecord.style.display = "none";
+
+        videoStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        video.srcObject = videoStream;
+      }
+
+      startRecord.onclick = function(){
+        startRecord.style.display = "none";
+        stopRecord.style.display = "inline";
+
+        mediaRecorder = new MediaRecorder(videoStream);
+
+        let blob = [];
+        mediaRecorder.addEventListener('dataavailable', function(e){
+          blob.push(e.data);
+        })
+
+        mediaRecorder.addEventListener('stop', function(){
+          var videoLocal = URL.createObjectURL(new Blob (blob));
+          downloadLink.href = videoLocal;
+        })
+
+        mediaRecorder.start();
+      }
+
+      stopRecord.onclick = function(){
+        mediaRecorder.stop();
+      }
+    </script>
+      </section>
+      <div class="smart">
+  <h2 class="smart-title">ЗАДАНИЕ ОТРЫТОГО ТИПА</h2>
+</div>
+      <textarea spellcheck="false" placeholder="Составьте по теме 1.5 КУЛЬТУРНАЯ ЖИЗНЬ НАРОДОВ СРЕДНЕЙ АЗИИ В СЕРЕДИНЕ XIX краткий конспект опираясь на те данные кторые я вам отправил в инструкции к заданию и постарайтесь записать небольшое видео где Вы пересказываете содержание темы уже  в краткой её форме, либо составьте краткий конспект по теме и скачайте его в формате Doc" required></textarea>
+      <div class="file-options">
+        <div class="option file-name">
+          <label>Напиши Имя</label>
+          <input type="text" spellcheck="false" placeholder="Напиши сюда Имя">
+        </div>
+        <div class="option save-as">
+          <label>Сохранить как</label>
+          <div class="select-menu">
+            <select>
+              <option value="text/plain">Text File (.txt)</option>
+              <option value="application/msword">Doc File (.doc)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <button class="save-btn" type="button">Сохранить текстом WORD</button>
+    </div>
+    
+
+  </body>
+</html>
